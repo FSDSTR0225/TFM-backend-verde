@@ -7,7 +7,6 @@ const { use } = require("../routes/userRoutes");
 
 const secretKey = process.env.JWT_SECRET;
 
-// const authenticateToken = async (req, res, next) => {
 const getMe = async (req, res) => {
   try {
     const authHeader = req.headers["authorization"];
@@ -38,10 +37,6 @@ const getUsers = async (req, res) => {
   }
 };
 
-/**
- * Obtener un user específico por ID
- * GET /users/:id
- */
 const getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -56,15 +51,10 @@ const getUserById = async (req, res) => {
   }
 };
 
-/**
- * Crear un nuevo user
- * POST /users
- */
 const createUser = async (req, res) => {
   try {
     const { username, password, email } = req.body;
 
-    // Validación de campos obligatorios
     if (!username || !password || !email) {
       return res
         .status(400)
@@ -77,8 +67,6 @@ const createUser = async (req, res) => {
       return res.status(400).json({ msg: "email format is not acceptable" });
     }
 
-    // Create a new user in DataBase
-    // const passwordHash = await hash(password, 10);
     const newUser = await User.create({
       username: username,
       password: password,
@@ -103,10 +91,6 @@ const createUser = async (req, res) => {
   }
 };
 
-/**
- * Actualizar un user existente
- * PUT /users/:id
- */
 const updateUser = async (req, res) => {
   try {
     const { username, password, email } = req.body;
@@ -118,7 +102,6 @@ const updateUser = async (req, res) => {
         .json({ msg: "error with username, password or email" });
     }
 
-    // Buscar y actualizar el user
     const user = await User.findByIdAndUpdate(
       req.params.id,
       { username, password, email },
@@ -135,10 +118,6 @@ const updateUser = async (req, res) => {
   }
 };
 
-/**
- * Eliminar un user
- * DELETE /users/:id
- */
 const deleteUser = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
@@ -153,10 +132,6 @@ const deleteUser = async (req, res) => {
   }
 };
 
-/**
- * Iniciar sesión de user
- * POST /users/login
- */
 const loginUser = async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -188,10 +163,6 @@ const loginUser = async (req, res) => {
   }
 };
 
-/**
- * search users with username
- * GET /users/search/:username
- */
 const searchUsersByName = async (req, res) => {
   try {
     const username = req.params.username;
@@ -246,8 +217,45 @@ const addUserFavorite = async (req, res) => {
     user.favorites.push(property);
     user.save();
     res.status(201).json({
-      msg: "add or remove to favorite successfully",
+      msg: "add to favorite successfully",
       favorites: user.favorites,
+    });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};
+const deleteUserFavorite = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    const property = await Property.findById(req.body);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    if (!property) {
+      return res.status(404).json({ message: "property not found" });
+    }
+
+    let selectedItemIndex;
+    console.log(user.favorites);
+    console.log(property.title);
+
+    user.favorites.map((item) => {
+      if (item.title == property.title) {
+        selectedItemIndex = user.favorites.indexOf(item);
+        console.log(selectedItemIndex);
+      }
+    });
+    if (selectedItemIndex === -1) {
+      console.log(selectedItemIndex);
+      return res.status(404).json({ message: "id not found" });
+    }
+    user.favorites.splice(selectedItemIndex, 1);
+    user.save();
+
+    res.status(201).json({
+      msg: "remove  favorite successfully",
+      selectedItemIndex: selectedItemIndex,
     });
   } catch (error) {
     res.status(500).json({ msg: error.message });
@@ -265,4 +273,5 @@ module.exports = {
   searchUsersByName,
   getUserFavorite,
   addUserFavorite,
+  deleteUserFavorite,
 };

@@ -11,6 +11,7 @@ const {
   searchUsersByName,
   getUserFavorite,
   addUserFavorite,
+  deleteUserFavorite,
 } = require("../controllers/userController");
 
 router.get("/all", getUsers);
@@ -20,10 +21,9 @@ router.post("/", createUser);
 router.put("/:id", updateUser);
 router.delete("/:id", deleteUser);
 router.post("/login", loginUser);
-
-// Route for find a user by his name
 router.get("/search/:userName", searchUsersByName);
 router.get("/favorite/:userId", getUserFavorite);
 router.post("/favorite/:userId", addUserFavorite);
+router.delete("/favorite/:userId", deleteUserFavorite);
 
 module.exports = router;

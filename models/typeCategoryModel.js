@@ -1,11 +1,10 @@
 const mongoose = require("mongoose");
 
-// Definimos el esquema de tarea
 const typeCategorySchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      enum: ["Office", "Villa", "Garage", "Apartment"],
+      enum: ["Apartment", "Villa", "Office", "Garage", "Land", "Warehouse"],
       required: true,
       unique: true,
     },

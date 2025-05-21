@@ -1,9 +1,5 @@
 const ContractCategory = require("../models/contractCategoryModel");
 
-/**
- * Get all of contractCategories
- * GET /categories
- */
 const getContractCategorys = async (req, res) => {
   try {
     const contractCategories = await ContractCategory.find({});
@@ -13,10 +9,6 @@ const getContractCategorys = async (req, res) => {
   }
 };
 
-/**
- * Find a category by Id
- * GET /categories/:id
- */
 const getContractCategoryById = async (req, res) => {
   try {
     const contractCategory = await ContractCategory.findById(req.params.id);
@@ -31,10 +23,6 @@ const getContractCategoryById = async (req, res) => {
   }
 };
 
-/**
- * Create a new category
- * POST /categories
- */
 const createContractCategory = async (req, res) => {
   try {
     const { name, desc } = req.body;
@@ -54,10 +42,6 @@ const createContractCategory = async (req, res) => {
   }
 };
 
-/**
- * Edit a contractCategory
- * PUT /categories/:id
- */
 const updateContractCategory = async (req, res) => {
   try {
     const { name, desc } = req.body;
@@ -82,13 +66,11 @@ const updateContractCategory = async (req, res) => {
   }
 };
 
-/**
- * Delete a contractCategory
- * DELETE /categories/:id
- */
 const deleteContractCategory = async (req, res) => {
   try {
-    const contractCategory = await ContractCategory.findByIdAndDelete(req.params.id);
+    const contractCategory = await ContractCategory.findByIdAndDelete(
+      req.params.id
+    );
 
     if (!contractCategory) {
       return res.status(404).json({ msg: "contractCategory no encontrado" });
@@ -100,30 +82,10 @@ const deleteContractCategory = async (req, res) => {
   }
 };
 
-/**
- * Search a contractCategory by name (solución del ejercicio anterior)
- * GET /categories/buscar/:name
- */
-// const searchContractCategoriesByName = async (req, res) => {
-//   try {
-//     const name = req.params.name;
-//       // Buscar categories cuyo name contenga el texto buscado (insensible a mayúsculas/minúsculas)
-//     const contractCategories = await ContractCategory.find({
-//       name: { $regex: name, $options: 'i' }   //regex muy importante aqui
-//     });
-//     res.status(200).json({ contractCategories });
-//   } catch (error) {
-//     res.status(500).json({ msg: error.message });
-//   }
-// };
-
-
-
 module.exports = {
   getContractCategorys,
   getContractCategoryById,
   createContractCategory,
   updateContractCategory,
   deleteContractCategory,
-  // searchContractCategoriesByName,
 };

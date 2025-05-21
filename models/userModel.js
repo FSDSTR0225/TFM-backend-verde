@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-// Definimos el esquema de usuario
 const userSchema = new mongoose.Schema(
   {
     username: {
@@ -20,7 +19,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      // select: false  Do not return the field in queries
+      // select: false  //Do not return the field in queries
     },
     recentSearches: {
       type: Object,
@@ -36,11 +35,10 @@ const userSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, // add  createdAt and updatedAt field automaticaly
+    timestamps: true, 
   }
 );
 
-// Creamos el modelo a partir del esquema
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;

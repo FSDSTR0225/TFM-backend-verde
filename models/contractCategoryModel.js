@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-// Definimos el esquema de tarea
 const contractCategorySchema = new mongoose.Schema(
   {
     name: {

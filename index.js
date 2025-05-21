@@ -7,7 +7,6 @@ const cookieParser = require("cookie-parser");
 
 const userRoutes = require("./routes/userRoutes");
 const propertyRoutes = require("./routes/propertyRoutes");
-const categoryRoutes = require("./routes/categoryRoutes");
 const contractCategoryRoutes = require("./routes/contractCategoryRoutes");
 const typeCategoryRoutes = require("./routes/typeCategoryRoutes");
 const cityRoutes = require("./routes/cityRoutes");
@@ -25,7 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false })); //true : when you wanna go deep in nested object
 app.use(cookieParser());
 
-// Conexión a MongoDB Atlas
+// MongoDB Connection
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => {
@@ -35,24 +34,22 @@ mongoose
     console.error("<❌ Error in connecting Mongo DB :>", error);
   });
 
-// Rutas de la API//
+//API Routes//
 app.use("/users", userRoutes);
 app.use("/properties", propertyRoutes);
-app.use("/categories", categoryRoutes);
 app.use("/contractCategory", contractCategoryRoutes);
 app.use("/typeCategory", typeCategoryRoutes);
 app.use("/cities", cityRoutes);
 app.use("/news", newsRoutes);
 app.use("/test", testRoutes);
 
-// Ruta de bienvenida
+//welcome route
 app.get("/", (req, res) => {
   res.json({
     mensaje: "Users and properties API",
     endpoints: {
       users: "/users",
       properties: "/properties",
-      categories: "/categories",
       contractCategory: "/contractCategory",
       typeCategory: "/typeCategory",
       cities: "/cities",
@@ -62,7 +59,6 @@ app.get("/", (req, res) => {
   });
 });
 
-// Iniciar el servidor
 app.listen(port, () => {
   console.log(`🚀 Server is running on http://localhost:${port}`);
 });

@@ -37,7 +37,6 @@ const createCity = async (req, res) => {
   try {
     const { province, name } = req.body;
 
-    // Validación de campos obligatorios
     if (!province || !name) {
       return res.status(400).json({ msg: "error with  name or province" });
     }
@@ -59,7 +58,6 @@ const editCity = async (req, res) => {
   try {
     const { province, name } = req.body;
 
-    // Validación de campos obligatorios
     if (!province || !name) {
       return res.status(400).json({ msg: "error with  name or province" });
     }

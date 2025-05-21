@@ -2,14 +2,8 @@ const Property = require("../models/propertyModel");
 const ContractCategory = require("../models/contractCategoryModel");
 const TypeCategory = require("../models/typeCategoryModel");
 
-/**
- * Get all of properties
- * GET /tareas
- */
-
 const getProperties = async (req, res) => {
   try {
-    // Utilizamos populate para incluir información del propietario
     const properties = await Property.find({})
       .populate("contractCategory")
       .populate("typeCategory");
@@ -20,10 +14,6 @@ const getProperties = async (req, res) => {
   }
 };
 
-/**
- * Get a property by id
- * GET /tareas/:id
- */
 const getPropertyById = async (req, res) => {
   try {
     const property = await Property.findById(req.params.id)
@@ -40,10 +30,6 @@ const getPropertyById = async (req, res) => {
   }
 };
 
-/**
- * Create a new property
- * POST /tareas
- */
 const createProperty = async (req, res) => {
   try {
     const {
@@ -63,7 +49,6 @@ const createProperty = async (req, res) => {
       city,
     } = req.body;
 
-    // Validating the input datas
     if (
       !title ||
       !desc ||
@@ -97,13 +82,6 @@ const createProperty = async (req, res) => {
       return res.status(400).json({ msg: "type Category did not match" });
     }
 
-    // if (Property.findOne({ title: title })) {
-    //   return res
-    //     .status(409)
-    //     .json({ msg: "this property existed try another one" });
-    // }
-
-    // create a new property
     const newProperty = await Property.create({
       title: title,
       desc: desc,
@@ -130,10 +108,6 @@ const createProperty = async (req, res) => {
   }
 };
 
-/**
- * Edit a property by Id
- * PUT /properties/:id
- */
 const updateProperty = async (req, res) => {
   try {
     const {
@@ -149,7 +123,6 @@ const updateProperty = async (req, res) => {
       minors,
     } = req.body;
 
-    // Validating the input datas
     if (
       !title ||
       !desc ||
@@ -192,10 +165,6 @@ const updateProperty = async (req, res) => {
   }
 };
 
-/**
- * Delete a property
- * DELETE /properties/:id
- */
 const deleteProperty = async (req, res) => {
   try {
     const property = await Property.findByIdAndDelete(req.params.id);
@@ -210,10 +179,6 @@ const deleteProperty = async (req, res) => {
   }
 };
 
-/**
- * Asignar un property to a property
- * PUT /properties/:id/assign
- */
 const assignOwner = async (req, res) => {
   try {
     const { ownerId } = req.body;
@@ -239,10 +204,7 @@ const assignOwner = async (req, res) => {
   }
 };
 
-/**
- * find property with owner Id
- * GET /properties/owner/:ownerId
- */
+
 const getPropertiesByOwner = async (req, res) => {
   try {
     const ownerId = req.params.ownerId;
@@ -267,11 +229,6 @@ const getPropertiesByCity = async (req, res) => {
   }
 };
 
-/**
-/**
- * Sign a typeCategory to a property
- * PUT /tareas/:id/settypeCategory
- */
 const assignCategoryToProperty = async (req, res) => {
   try {
     const { typeCategoryId } = req.body;
@@ -296,10 +253,6 @@ const assignCategoryToProperty = async (req, res) => {
   }
 };
 
-/**
-    // Get a Category by Id
- * GET /tareas/typeCategory/:typeCategoryId
- */
 const getPropertiesByCategory = async (req, res) => {
   try {
     const typeCategoryId = req.params.typeCategoryId;
@@ -309,6 +262,32 @@ const getPropertiesByCategory = async (req, res) => {
     }).populate("typeCategory", "title");
 
     res.status(200).json({ msg: "tareas find successfully", properties });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};
+
+const getPropertiesSearch = async (req, res) => {
+  try {
+    const city = req.params.cityName;
+    const contract = await ContractCategory.findOne({
+      name: req.params.contract,
+    });
+    const type = await TypeCategory.findOne({ name: req.params.type });
+    if (!contract || !type || !city) {
+      return res
+        .status(400)
+        .json({ msg: "Contract or type or city not found" });
+    }
+
+    const properties = await Property.find({
+      city: city,
+      contractCategory: contract,
+      typeCategory: type,
+    })
+      .populate("contractCategory")
+      .populate("typeCategory");
+    res.status(200).json({ msg: "success", properties });
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
@@ -325,4 +304,5 @@ module.exports = {
   getPropertiesByCity,
   assignCategoryToProperty,
   getPropertiesByCategory,
+  getPropertiesSearch,
 };
