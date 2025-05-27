@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema(
   {
     username: {
-      // Strings have enum, match, minLength, and maxLength validators.
       type: String,
       required: true,
       unique: true,

@@ -93,7 +93,7 @@ const createUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const { username, password, email } = req.body;
+    const { username, email, password } = req.body;
 
     // Validación de campos obligatorios
     if (!username || !password || !email) {
