@@ -204,7 +204,6 @@ const assignOwner = async (req, res) => {
   }
 };
 
-
 const getPropertiesByOwner = async (req, res) => {
   try {
     const ownerId = req.params.ownerId;
