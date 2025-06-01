@@ -3,7 +3,6 @@ const Property = require("../models/propertyModel");
 const Validator = require("../validators/validators");
 // const { hash } = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { use } = require("../routes/userRoutes");
 
 const secretKey = process.env.JWT_SECRET;
 
@@ -262,6 +261,30 @@ const deleteUserFavorite = async (req, res) => {
   }
 };
 
+const changeAvatar = async (req, res) => {
+  try {
+    const { username, image } = req.body;
+
+    // Validación de campos obligatorios
+    if (!username || !image) {
+      return res.status(402).json({ msg: "error with username or image" });
+    }
+
+    const user = await User.findOne({ username: username });
+
+    if (!user) {
+      return res.status(404).json({ msg: "User did not find ! " });
+    }
+
+    user.image = image;
+    user.save();
+
+    res.json({ msg: "User edited successfully", user });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};
+
 module.exports = {
   getUsers,
   getMe,
@@ -274,4 +297,5 @@ module.exports = {
   getUserFavorite,
   addUserFavorite,
   deleteUserFavorite,
+  changeAvatar,
 };

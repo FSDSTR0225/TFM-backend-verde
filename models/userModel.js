@@ -25,16 +25,20 @@ const userSchema = new mongoose.Schema(
       required: false,
     },
     messages: {
-      type: Object,
+      type: Array,
       required: false,
     },
     favorites: {
       type: Array,
       required: false,
     },
+    image: {
+      type: String,
+      required: false,
+    },
   },
   {
-    timestamps: true, 
+    timestamps: true,
   }
 );
 

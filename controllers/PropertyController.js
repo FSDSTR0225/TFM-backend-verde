@@ -47,6 +47,7 @@ const createProperty = async (req, res) => {
       contractCategory,
       typeCategory,
       city,
+      image,
     } = req.body;
 
     if (
@@ -63,7 +64,8 @@ const createProperty = async (req, res) => {
       !owner ||
       !contractCategory ||
       !typeCategory ||
-      !city
+      !city ||
+      !image
     ) {
       return res.status(400).json({ msg: "one or more data did not send" });
     }
@@ -97,6 +99,7 @@ const createProperty = async (req, res) => {
       contractCategory: thiscontractCategory,
       typeCategory: thistypeCategory,
       city: city,
+      image: image,
     });
 
     res.status(201).json({
@@ -212,10 +215,12 @@ const getPropertiesByOwner = async (req, res) => {
       "nombre"
     );
     res.json(properties);
+    
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
 };
+
 const getPropertiesByCity = async (req, res) => {
   try {
     const city = req.params.cityName;
