@@ -93,7 +93,7 @@ io.on('connection', socket => {
   console.log(`User ${socket.id} connected`)
 
   // Upon connection - only to user 
-  socket.emit('message', buildMsg(ADMIN, "Welcome to Chat App!"))
+  socket.emit('message', buildMsg(ADMIN, "Welcome to your Chat! Select an item to continue"))
 
   socket.on('enterRoom', ({ name, room }) => {
 
@@ -120,7 +120,7 @@ io.on('connection', socket => {
       
 
       // To user who joined 
-      socket.emit('message', buildMsg(ADMIN, `You have joined the ${user.room} chat room`))
+      socket.emit('message', buildMsg(ADMIN, `You have selected the chat. Now you can type your message !`))
 
       // To everyone else 
       socket.broadcast.to(user.room).emit('message', buildMsg(ADMIN, `${user.name} has joined the room`))

@@ -2,19 +2,22 @@ const mongoose = require("mongoose");
 
 const MessageSchema = new mongoose.Schema(
   {
-    sender: {
+    senderId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    receiver: {
+    senderName: {
+      type: String,
+      required: true,
+    },
+    receiverId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    property: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Property",
+    receiverName: {
+      type: String,
       required: true,
     },
     roomId: {
@@ -24,16 +27,19 @@ const MessageSchema = new mongoose.Schema(
     },
     message: {
       type: String,
-
+      required: true,
     },
-    isRead: {
-      type: Boolean,
-
+    time: {
+      type: String,
     },
-    isDeleted: {
-      type: Boolean,
+    // isRead: {
+    //   type: Boolean,
 
-    },
+    // },
+    // isDeleted: {
+    //   type: Boolean,
+
+    // },
   },
   {
     timestamps: true,

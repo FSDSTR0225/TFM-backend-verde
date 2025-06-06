@@ -34,19 +34,34 @@ const getMessagesByRoomId = async (req, res) => {
 
 const createMessage = async (req, res) => {
   try {
-    const { sender, receiver, property, roomId, message } = req.body;
+    const { senderId, senderName, receiverId, receiverName, roomId, message } =
+      req.body;
 
-    if (!sender || !receiver || !property || !roomId || !message) {
+    if (
+      !senderId ||
+      !senderName ||
+      !receiverId ||
+      !receiverName ||
+      !roomId ||
+      !message
+    ) {
       return res.status(400).json({ msg: "error with  datas" });
     }
 
     const newMessage = await Message.create({
-      sender,
-      receiver,
-      property,
+      senderId,
+      senderName,
+      receiverId,
+      receiverName,
       roomId,
       message,
+      time: new Intl.DateTimeFormat("default", {
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+      }).format(new Date()),
     });
+
     res.status(201).json({
       msg: "new Message created successfully",
       createdMessage: newMessage,
