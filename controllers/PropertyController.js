@@ -115,49 +115,72 @@ const updateProperty = async (req, res) => {
   try {
     const {
       title,
-      desc,
-      location,
       price,
-      duration,
-      bedrooms,
+      city,
+      location,
+      contractCategory,
       bathrooms,
+      typeCategory,
+      bedrooms,
       pets,
       couples,
+      desc,
       minors,
+      duration,
     } = req.body;
 
     if (
       !title ||
-      !desc ||
-      !location ||
       !price ||
-      !duration ||
-      !bedrooms ||
+      !city ||
+      !location ||
+      !contractCategory ||
       !bathrooms ||
+      !typeCategory ||
+      !bedrooms ||
       !pets ||
       !couples ||
-      !minors
+      !desc ||
+      !minors ||
+      !duration
     ) {
       return res.status(400).json({ msg: "one or more data did not send" });
     }
 
+    const thiscontractCategory = await ContractCategory.findOne({
+      name: contractCategory,
+    });
+    if (!thiscontractCategory) {
+      return res.status(400).json({ msg: "contract category did not match" });
+    }
+
+    const thistypeCategory = await TypeCategory.findOne({
+      name: typeCategory,
+    });
+    if (!thistypeCategory) {
+      return res.status(400).json({ msg: "type Category did not match" });
+    }
+
     updateData = {
       title: title,
-      desc: desc,
-      location: location,
       price: price,
-      duration: duration,
-      bedrooms: bedrooms,
+      city: city,
+      location: location,
+      contractCategory: thiscontractCategory,
       bathrooms: bathrooms,
+      typeCategory: thistypeCategory,
+      bedrooms: bedrooms,
       pets: pets,
       couples: couples,
+      desc: desc,
       minors: minors,
+      duration: duration,
     };
     const property = await Property.findByIdAndUpdate(
       req.params.id,
       updateData,
       { new: true }
-    ).populate("owner", "nombre");
+    ).populate("owner", "id");
 
     if (!property) {
       return res.status(404).json({ msg: "Property no encontrada" });
@@ -195,7 +218,7 @@ const assignOwner = async (req, res) => {
       req.params.id,
       { owner: ownerId },
       { new: true }
-    ).populate("owner", "nombre");
+    ).populate("owner", "id");
 
     if (!property) {
       return res.status(404).json({ msg: "Property no encontrada" });
@@ -210,12 +233,11 @@ const assignOwner = async (req, res) => {
 const getPropertiesByOwner = async (req, res) => {
   try {
     const ownerId = req.params.ownerId;
-    const properties = await Property.find({ owner: ownerId }).populate(
-      "owner",
-      "nombre"
-    );
+    const properties = await Property.find({ owner: ownerId })
+      .populate("owner", "id")
+      .populate("contractCategory")
+      .populate("typeCategory");
     res.json(properties);
-    
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }

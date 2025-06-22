@@ -32,6 +32,9 @@ const MessageSchema = new mongoose.Schema(
     time: {
       type: String,
     },
+    date: {
+      type: String,
+    },
     // isRead: {
     //   type: Boolean,
 

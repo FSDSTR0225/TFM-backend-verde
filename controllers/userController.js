@@ -3,6 +3,8 @@ const Property = require("../models/propertyModel");
 const Validator = require("../validators/validators");
 // const { hash } = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const brevo = require("@getbrevo/brevo");
+require("dotenv").config();
 
 const secretKey = process.env.JWT_SECRET;
 
@@ -79,6 +81,7 @@ const createUser = async (req, res) => {
       },
       process.env.JWT_SECRET
     );
+
     res.status(201).json({
       access_token: token,
       token_type: "Bearer",
@@ -88,6 +91,57 @@ const createUser = async (req, res) => {
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
+};
+
+const sendMail = async (req, res) => {
+  const { userId, type, subject } = req.body;
+
+  if (!userId || !type || !subject) {
+    return res
+      .status(404)
+      .json({ message: "error in userId or type or subject" });
+  }
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  const apiInstance = new brevo.TransactionalEmailsApi();
+  let apiKey = apiInstance.authentications["apiKey"];
+  apiKey.apiKey = process.env.BREVO_API_KEY;
+
+  const sendSmtpEmail = new brevo.SendSmtpEmail();
+
+  sendSmtpEmail.subject = subject;
+  {
+    type === "Welcome"
+      ? (sendSmtpEmail.htmlContent = `<h1>Hello ${user.username} 👋</h1><p>Thanks for signing up!</p>`)
+      : (sendSmtpEmail.htmlContent = `<p>Information from Casa verde!</p>`);
+  }
+  sendSmtpEmail.sender = {
+    name: "Casa Verde",
+    email: "tbandad@gmail.com",
+  };
+  sendSmtpEmail.to = [{ email: user.email, name: user.username }];
+  sendSmtpEmail.replyTo = {
+    name: "Casa Verde",
+    email: "tbandad@gmail.com",
+  };
+
+  apiInstance.sendTransacEmail(sendSmtpEmail).then(
+    function (data) {
+      console.log(
+        "API called successfully. Returned data: " + JSON.stringify(data)
+      );
+      res.send("Email sent successfully via Brevo API");
+    },
+    function (error) {
+      console.error(error);
+      res.status(500).send("Error sending email");
+    }
+  );
 };
 
 const updateUser = async (req, res) => {
@@ -254,7 +308,7 @@ const deleteUserFavorite = async (req, res) => {
 
     res.status(201).json({
       msg: "remove  favorite successfully",
-      selectedItemIndex: selectedItemIndex,
+      favorites: user.favorites,
     });
   } catch (error) {
     res.status(500).json({ msg: error.message });
@@ -298,4 +352,5 @@ module.exports = {
   addUserFavorite,
   deleteUserFavorite,
   changeAvatar,
+  sendMail,
 };

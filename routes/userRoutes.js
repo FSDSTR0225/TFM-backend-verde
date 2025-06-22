@@ -13,12 +13,13 @@ const {
   addUserFavorite,
   deleteUserFavorite,
   changeAvatar,
+  sendMail
 } = require("../controllers/userController");
 
 router.get("/all", getUsers);
 router.get("/me", getMe);
 router.get("/:id", getUserById);
-router.post("/", createUser);
+router.post("/newUser", createUser);
 router.put("/:id", updateUser);
 router.delete("/:id", deleteUser);
 router.post("/login", loginUser);
@@ -27,5 +28,6 @@ router.get("/search/:userName", searchUsersByName);
 router.get("/favorite/:userId", getUserFavorite);
 router.post("/favorite/:userId", addUserFavorite);
 router.delete("/favorite/:userId", deleteUserFavorite);
+router.post("/sendMail", sendMail);
 
 module.exports = router;

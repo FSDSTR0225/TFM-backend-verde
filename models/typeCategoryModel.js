@@ -4,7 +4,15 @@ const typeCategorySchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      enum: ["Apartment", "Villa", "Office", "Garage", "Land", "Warehouse"],
+      enum: [
+        "Apartment",
+        "Villa",
+        "Flat",
+        "Room",
+        "Office",
+        "Garage",
+        "Storage",
+      ],
       required: true,
       unique: true,
     },

@@ -1,4 +1,5 @@
 const Message = require("../models/messageModel");
+const User = require("../models/userModel");
 
 const getAllMessage = async (req, res) => {
   try {
@@ -34,25 +35,24 @@ const getMessagesByRoomId = async (req, res) => {
 
 const createMessage = async (req, res) => {
   try {
-    const { senderId, senderName, receiverId, receiverName, roomId, message } =
-      req.body;
+    const { senderId, receiverId, roomId, message } = req.body;
 
-    if (
-      !senderId ||
-      !senderName ||
-      !receiverId ||
-      !receiverName ||
-      !roomId ||
-      !message
-    ) {
+    if (!senderId || !receiverId || !roomId || !message) {
       return res.status(400).json({ msg: "error with  datas" });
     }
 
+    const sender = await User.findById(senderId);
+    const reciever = await User.findById(receiverId);
+
+    if (!sender || !reciever) {
+      return res.status(400).json({ msg: "sender or reciever not found" });
+    }
+
     const newMessage = await Message.create({
-      senderId,
-      senderName,
-      receiverId,
-      receiverName,
+      senderId: senderId,
+      senderName: sender.username,
+      receiverId: receiverId,
+      receiverName: reciever.username,
       roomId,
       message,
       time: new Intl.DateTimeFormat("default", {
@@ -60,6 +60,7 @@ const createMessage = async (req, res) => {
         minute: "numeric",
         second: "numeric",
       }).format(new Date()),
+      date : new Intl.DateTimeFormat("en-US").format(new Date())
     });
 
     res.status(201).json({
