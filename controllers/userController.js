@@ -133,9 +133,6 @@ const sendMail = async (req, res) => {
 
   apiInstance.sendTransacEmail(sendSmtpEmail).then(
     function (data) {
-      console.log(
-        "API called successfully. Returned data: " + JSON.stringify(data)
-      );
       res.send("Email sent successfully via Brevo API");
     },
     function (error) {
@@ -289,17 +286,13 @@ const deleteUserFavorite = async (req, res) => {
     }
 
     let selectedItemIndex;
-    console.log(user.favorites);
-    console.log(property.title);
 
     user.favorites.map((item) => {
       if (item.title == property.title) {
         selectedItemIndex = user.favorites.indexOf(item);
-        console.log(selectedItemIndex);
       }
     });
     if (selectedItemIndex === -1) {
-      console.log(selectedItemIndex);
       return res.status(404).json({ message: "id not found" });
     }
     user.favorites.splice(selectedItemIndex, 1);

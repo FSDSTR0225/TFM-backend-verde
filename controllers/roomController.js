@@ -51,7 +51,6 @@ const createRoom = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ msg: error.room });
-    console.log(error);
   }
 };
 
