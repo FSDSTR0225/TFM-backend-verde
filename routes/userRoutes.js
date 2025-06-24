@@ -13,7 +13,8 @@ const {
   addUserFavorite,
   deleteUserFavorite,
   changeAvatar,
-  sendMail
+  sendMail,
+  contactUs,
 } = require("../controllers/userController");
 
 router.get("/all", getUsers);
@@ -29,5 +30,6 @@ router.get("/favorite/:userId", getUserFavorite);
 router.post("/favorite/:userId", addUserFavorite);
 router.delete("/favorite/:userId", deleteUserFavorite);
 router.post("/sendMail", sendMail);
+router.post("/contactUs", contactUs);
 
 module.exports = router;

@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const Property = require("../models/propertyModel");
+const Contact = require("../models/contactModel");
 const Validator = require("../validators/validators");
 // const { hash } = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -148,7 +149,6 @@ const updateUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
-    // Validación de campos obligatorios
     if (!username || !password || !email) {
       return res
         .status(400)
@@ -189,7 +189,6 @@ const loginUser = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // Validación de campos obligatorios
     if (!username || !password) {
       return res.status(400).json({ msg: "error with username or password" });
     }
@@ -319,7 +318,6 @@ const changeAvatar = async (req, res) => {
   try {
     const { username, image } = req.body;
 
-    // Validación de campos obligatorios
     if (!username || !image) {
       return res.status(402).json({ msg: "error with username or image" });
     }
@@ -339,6 +337,27 @@ const changeAvatar = async (req, res) => {
   }
 };
 
+const contactUs = async (req, res) => {
+  try {
+    const { name, family, message, email } = req.body;
+
+    if (!name || !family || !message || !email) {
+      return res.status(402).json({ msg: "error with datas" });
+    }
+
+    const newContact = await Contact.create({
+      name,
+      family,
+      message,
+      email,
+    });
+
+    res.json({ msg: "Your Message deliver suuccessfully", newContact });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};
+
 module.exports = {
   getUsers,
   getMe,
@@ -353,4 +372,5 @@ module.exports = {
   deleteUserFavorite,
   changeAvatar,
   sendMail,
+  contactUs,
 };
