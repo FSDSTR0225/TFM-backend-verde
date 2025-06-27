@@ -48,6 +48,8 @@ const createProperty = async (req, res) => {
       typeCategory,
       city,
       image,
+      latlng,
+      area,
     } = req.body;
 
     if (
@@ -65,7 +67,8 @@ const createProperty = async (req, res) => {
       !contractCategory ||
       !typeCategory ||
       !city ||
-      !image
+      !image||
+      !area
     ) {
       return res.status(400).json({ msg: "one or more data did not send" });
     }
@@ -95,11 +98,13 @@ const createProperty = async (req, res) => {
       pets: pets,
       couples: couples,
       minors: minors,
-      owner: owner || null, // Si no se proporciona owner, será null,
+      owner: owner || null, //If has no owner must be null
       contractCategory: thiscontractCategory,
       typeCategory: thistypeCategory,
       city: city,
       image: image,
+      latlng: latlng,
+      area: area,
     });
 
     res.status(201).json({

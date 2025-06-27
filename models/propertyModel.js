@@ -70,11 +70,15 @@ const propertySchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    // infos: {
-    //   //  metraj / tedade otagh / saale sakht / moble boodan
-    //   type: String,
-    //   required: false,
-    // },
+    latlng: {
+      type: Array,
+      required: false,
+    },
+    area: {
+      type: String,
+      required: true,
+    },
+
   },
   {
     timestamps: true, // Add fields created at and updated  automatically
