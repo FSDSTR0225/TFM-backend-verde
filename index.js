@@ -22,7 +22,7 @@ const roomRoutes = require("./routes/roomRoutes");
 const upload = multer({ dest: "uploads/" });
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 // Middleware for proccesing JSON y datas of form
 app.use(cors()); // Enable CORS for all requests
