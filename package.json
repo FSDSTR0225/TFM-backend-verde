@@ -6,8 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "vitest",
-    "build": "vite build"
+    "test": "vitest"
   },
   "keywords": [
     "mongodb",
@@ -31,7 +30,7 @@
   },
   "devDependencies": {
     "mongodb-memory-server": "^10.1.2",
-    "nodemon": "^3.1.9",
+    "nodemon": "^3.1.10",
     "supertest": "^7.0.0",
     "vitest": "^3.1.4"
   }
