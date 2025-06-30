@@ -1,9 +1,9 @@
 const express = require("express");
-const multer = require("multer");
+// const multer = require("multer");
 const mongoose = require("mongoose");
 require("dotenv").config();
 const cors = require("cors");
-const cookieParser = require("cookie-parser");
+// const cookieParser = require("cookie-parser");
 const { Server } = require("socket.io");
 const User = require("./models/userModel");
 const Property = require("./models/propertyModel");
@@ -19,7 +19,7 @@ const testRoutes = require("./routes/testRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 const roomRoutes = require("./routes/roomRoutes");
 
-const upload = multer({ dest: "uploads/" });
+// const upload = multer({ dest: "uploads/" });
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -27,8 +27,8 @@ const port = process.env.PORT || 4000;
 // Middleware for proccesing JSON y datas of form
 app.use(cors()); // Enable CORS for all requests
 app.use(express.json());
-app.use(express.urlencoded({ extended: false })); //true : when you wanna go deep in nested object
-app.use(cookieParser());
+// app.use(express.urlencoded({ extended: false })); //true : when you wanna go deep in nested object
+// app.use(cookieParser());
 
 // MongoDB Connection
 mongoose
