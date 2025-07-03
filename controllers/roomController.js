@@ -30,23 +30,28 @@ const createRoom = async (req, res) => {
     if (!users || !property) {
       return res.status(400).json({ msg: "error with users or property" });
     }
-    let propoomsArr = await Room.find({ property: property })
-      .populate("property")
-      .populate("users");
-    let duplicate = propoomsArr.find((item) => (item.users = users.sort()));
 
-    if (duplicate) {
-      return res
-        .status(400)
-        .json({ msg: "Duplicate , Room is existed !", createdRoom: duplicate });
+    let propRoomsArr = await Room.find({ property: property });
+
+    for (const item of propRoomsArr) {
+      const sortedUsers = users.map((u) => u.toString()).sort();
+      const itemUsers = item.users.map((u) => u.toString()).sort();
+
+      if (itemUsers[0] === sortedUsers[0] && itemUsers[1] === sortedUsers[1]) {
+        return res.status(400).json({
+          msg: "Duplicate, room already exists!",
+          createdRoom: item,
+        });
+      }
     }
+
     const newRoom = await Room.create({
       users: users.sort(),
       property,
     });
 
     res.status(201).json({
-      msg: "new Room created successfully",
+      msg: "new Room is created successfully",
       createdRoom: newRoom,
     });
   } catch (error) {
