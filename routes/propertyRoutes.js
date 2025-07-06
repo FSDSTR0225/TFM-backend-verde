@@ -32,6 +32,7 @@ const {
   getPropertiesByOwner,
   getPropertiesByCity,
   getPropertiesSearch,
+  findPropertiesByLocations,
 } = require("../controllers/PropertyController");
 
 router.get("/", getProperties);
@@ -42,5 +43,6 @@ router.delete("/:id", deleteProperty);
 router.get("/owner/:ownerId", getPropertiesByOwner);
 router.get("/city/:cityName", getPropertiesByCity);
 router.get("/search/:cityName/:contract/:type", getPropertiesSearch);
+router.post("/search/locations", findPropertiesByLocations);
 
 module.exports = router;

@@ -67,7 +67,7 @@ const createProperty = async (req, res) => {
       !contractCategory ||
       !typeCategory ||
       !city ||
-      !image||
+      !image ||
       !area
     ) {
       return res.status(400).json({ msg: "one or more data did not send" });
@@ -324,6 +324,35 @@ const getPropertiesSearch = async (req, res) => {
   }
 };
 
+const findPropertiesByLocations = async (req, res) => {
+  try {
+    const polygonCoords = req.body;
+    polygonCoords.push(polygonCoords[0]);
+    console.log(polygonCoords);
+
+    if (!polygonCoords) {
+      return res.status(400).json({ msg: "polygonCoords not found" });
+    }
+
+    const polygon = {
+      type: "Polygon",
+      coordinates: [polygonCoords],
+    };
+
+    const results = await Property.find({
+      latlng: {
+        $geoWithin: {
+          $geometry: polygon,
+        },
+      },
+    });
+
+    res.status(200).json({ msg: "success", results });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};
+
 module.exports = {
   getProperties,
   getPropertyById,
@@ -336,4 +365,5 @@ module.exports = {
   assignCategoryToProperty,
   getPropertiesByCategory,
   getPropertiesSearch,
+  findPropertiesByLocations,
 };
