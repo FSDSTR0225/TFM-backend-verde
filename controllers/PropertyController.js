@@ -298,9 +298,36 @@ const getPropertiesByCategory = async (req, res) => {
   }
 };
 
+// const getPropertiesSearch = async (req, res) => {
+//   try {
+//     const city = req.params.cityName;
+//     const polyArray = req.params.polyArray;
+//     const contract = await ContractCategory.findOne({
+//       name: req.params.contract,
+//     });
+//     const type = await TypeCategory.findOne({ name: req.params.type });
+//     if (!contract || !type || !city) {
+//       return res
+//         .status(400)
+//         .json({ msg: "Contract or type or city not found" });
+//     }
+
+//     const properties = await Property.find({
+//       city: city,
+//       contractCategory: contract,
+//       typeCategory: type,
+//     })
+//       .populate("contractCategory")
+//       .populate("typeCategory");
+//     res.status(200).json({ msg: "success", properties });
+//   } catch (error) {
+//     res.status(500).json({ msg: error.message });
+//   }
+// };
 const getPropertiesSearch = async (req, res) => {
   try {
     const city = req.params.cityName;
+
     const contract = await ContractCategory.findOne({
       name: req.params.contract,
     });
@@ -311,14 +338,39 @@ const getPropertiesSearch = async (req, res) => {
         .json({ msg: "Contract or type or city not found" });
     }
 
-    const properties = await Property.find({
-      city: city,
-      contractCategory: contract,
-      typeCategory: type,
-    })
-      .populate("contractCategory")
-      .populate("typeCategory");
-    res.status(200).json({ msg: "success", properties });
+    // start of polygon part
+    const { polyArray } = req.body;
+    if (polyArray.length) {
+      polyArray.push(polyArray[0]);
+      const polygon = {
+        type: "Polygon",
+        coordinates: [polyArray],
+      };
+      const properties = await Property.find({
+        latlng: {
+          $geoWithin: {
+            $geometry: polygon,
+          },
+        },
+        city: city,
+        contractCategory: contract,
+        typeCategory: type,
+      })
+        .populate("contractCategory")
+        .populate("typeCategory");
+      res.status(200).json({ msg: "success with map", properties });
+      console.log(properties);
+      //end of polygon part
+    } else {
+      const properties = await Property.find({
+        city: city,
+        contractCategory: contract,
+        typeCategory: type,
+      })
+        .populate("contractCategory")
+        .populate("typeCategory");
+      res.status(200).json({ msg: "success without map", properties });
+    }
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
@@ -326,18 +378,23 @@ const getPropertiesSearch = async (req, res) => {
 
 const findPropertiesByLocations = async (req, res) => {
   try {
-    const polygonCoords = req.body;
+    const { polygonCoords, city, typeCat, contractCat } = req.body;
     polygonCoords.push(polygonCoords[0]);
-    console.log(polygonCoords);
 
-    if (!polygonCoords) {
-      return res.status(400).json({ msg: "polygonCoords not found" });
+    const contract = await ContractCategory.findOne({
+      name: contractCat,
+    });
+    const type = await TypeCategory.findOne({ name: typeCat });
+
+    if (!polygonCoords || !city || !type || !contract) {
+      return res.status(400).json({ msg: "polygonCoords or datas not found" });
     }
 
     const polygon = {
       type: "Polygon",
       coordinates: [polygonCoords],
     };
+    console.log(polygon, city, contract.name, type.name);
 
     const results = await Property.find({
       latlng: {
@@ -345,6 +402,9 @@ const findPropertiesByLocations = async (req, res) => {
           $geometry: polygon,
         },
       },
+      city: city,
+      contractCategory: contract,
+      typeCategory: type,
     });
 
     res.status(200).json({ msg: "success", results });

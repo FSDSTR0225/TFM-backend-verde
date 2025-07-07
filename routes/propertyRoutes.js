@@ -42,7 +42,8 @@ router.put("/:id", updateProperty);
 router.delete("/:id", deleteProperty);
 router.get("/owner/:ownerId", getPropertiesByOwner);
 router.get("/city/:cityName", getPropertiesByCity);
-router.get("/search/:cityName/:contract/:type", getPropertiesSearch);
+// router.get("/search/:cityName/:contract/:type/:polyArray", getPropertiesSearch);
+router.post("/search/:cityName/:contract/:type", getPropertiesSearch);
 router.post("/search/locations", findPropertiesByLocations);
 
 module.exports = router;

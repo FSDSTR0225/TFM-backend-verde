@@ -11,6 +11,9 @@ const CitySchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    location:{
+      type:Array,
+    }
   },
   {
     timestamps: true,
