@@ -2,9 +2,9 @@ const User = require("../models/userModel");
 const Property = require("../models/propertyModel");
 const Contact = require("../models/contactModel");
 const Validator = require("../validators/validators");
-// const { hash } = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const brevo = require("@getbrevo/brevo");
+const bcrypt = require("bcrypt");
 require("dotenv").config();
 
 const secretKey = process.env.JWT_SECRET;
@@ -69,9 +69,14 @@ const createUser = async (req, res) => {
       return res.status(400).json({ msg: "email format is not acceptable" });
     }
 
+    const saltRounds = 10;
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
     const newUser = await User.create({
       username: username,
-      password: password,
+      password: hashedPassword,
       email: email,
     });
     const token = jwt.sign(
@@ -191,10 +196,16 @@ const loginUser = async (req, res) => {
     }
 
     // Buscar user por username y contraseña
-    const user = await User.findOne({ username, password });
+    const user = await User.findOne({ username });
 
     if (!user) {
       return res.status(403).json({ msg: "User did not find !" });
+    }
+
+    // Verify password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if(!isMatch){
+      return res.status(400).json({ msg: "password Error" });
     }
 
     const token = jwt.sign(

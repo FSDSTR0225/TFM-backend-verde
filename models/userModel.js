@@ -18,7 +18,6 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      // select: false  //Do not return the field in queries
     },
     recentSearches: {
       type: Object,

@@ -35,14 +35,6 @@ const MessageSchema = new mongoose.Schema(
     date: {
       type: String,
     },
-    // isRead: {
-    //   type: Boolean,
-
-    // },
-    // isDeleted: {
-    //   type: Boolean,
-
-    // },
   },
   {
     timestamps: true,

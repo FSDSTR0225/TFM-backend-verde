@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-// Definimos el esquema de tarea
 const propertySchema = new mongoose.Schema(
   {
     title: {
@@ -81,11 +80,10 @@ const propertySchema = new mongoose.Schema(
 
   },
   {
-    timestamps: true, // Add fields created at and updated  automatically
+    timestamps: true,
   }
 );
 
-// Creamos el modelo a partir del esquema
 const Property = mongoose.model("Property", propertySchema);
 
 module.exports = Property;
