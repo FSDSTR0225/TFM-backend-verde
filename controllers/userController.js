@@ -157,17 +157,19 @@ const updateUser = async (req, res) => {
         .json({ msg: "error with username, password or email" });
     }
 
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
     const user = await User.findByIdAndUpdate(
       req.params.id,
-      { username, password, email },
+      { username: username, password: hashedPassword, email: email },
       { new: true } // Devuelve el documento actualizado
     );
 
     if (!user) {
       return res.status(404).json({ msg: "User did not find ! " });
     }
-
-    res.json({ msg: "User edited successfully", user });
+    return res.status(201).json({ msg: "User edited successfully", user });
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
@@ -204,7 +206,7 @@ const loginUser = async (req, res) => {
 
     // Verify password
     const isMatch = await bcrypt.compare(password, user.password);
-    if(!isMatch){
+    if (!isMatch) {
       return res.status(400).json({ msg: "password Error" });
     }
 

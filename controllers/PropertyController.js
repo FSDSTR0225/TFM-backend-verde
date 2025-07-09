@@ -378,6 +378,9 @@ const findPropertiesByLocations = async (req, res) => {
       contractCategory: contract,
       typeCategory: type,
     });
+    if(!results.length){
+      return res.status(400).json({ msg: "not found any props" });
+    }
 
     res.status(200).json({ msg: "success", results });
   } catch (error) {
