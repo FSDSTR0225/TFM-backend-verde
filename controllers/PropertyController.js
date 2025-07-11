@@ -132,6 +132,7 @@ const updateProperty = async (req, res) => {
       desc,
       minors,
       duration,
+      area,
     } = req.body;
 
     if (
@@ -147,7 +148,8 @@ const updateProperty = async (req, res) => {
       !couples ||
       !desc ||
       !minors ||
-      !duration
+      !duration ||
+      !area
     ) {
       return res.status(400).json({ msg: "one or more data did not send" });
     }
@@ -180,6 +182,7 @@ const updateProperty = async (req, res) => {
       desc: desc,
       minors: minors,
       duration: duration,
+      area: area,
     };
     const property = await Property.findByIdAndUpdate(
       req.params.id,
@@ -378,7 +381,7 @@ const findPropertiesByLocations = async (req, res) => {
       contractCategory: contract,
       typeCategory: type,
     });
-    if(!results.length){
+    if (!results.length) {
       return res.status(400).json({ msg: "not found any props" });
     }
 

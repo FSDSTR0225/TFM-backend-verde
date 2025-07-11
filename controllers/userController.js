@@ -69,6 +69,11 @@ const createUser = async (req, res) => {
       return res.status(400).json({ msg: "email format is not acceptable" });
     }
 
+    const emailDuplicate = await User.findOne({email:email})
+    if(emailDuplicate){
+      return res.status(400).json({ msg: "This user has been registered before with this Email" });
+    }
+
     const saltRounds = 10;
 
     // Hash the password
@@ -123,8 +128,23 @@ const sendMail = async (req, res) => {
   sendSmtpEmail.subject = subject;
   {
     type === "Welcome"
-      ? (sendSmtpEmail.htmlContent = `<h1>Hello ${user.username} 👋</h1><p>Thanks for signing up!</p>`)
+      ? (sendSmtpEmail.htmlContent = ` 
+      <div style="font-family: Arial, sans-serif; background-color: #f4f4f7; padding: 30px; border-radius: 8px;">
+        <h1 style="color: #01796f;">Hello ${user.username} 👋</h1>
+        <p>Welcome aboard!</p>
+        <p>Thanks for signing up—your journey with us starts now, and we're excited to have you as part of our community.</p>
+        <ul>
+          <li>🔒 Member-only features</li>
+          <li>📢 News and updates</li>
+          <li>💬 Personalized support</li>
+        </ul>
+        <p>Just hit reply if you need anything. We're here for you!</p>
+        <p style="margin-top: 20px;">Cheers,<br><strong>The Team 🚀</strong></p>
+      <small style="color: #888;">You received this email because you signed up for our service.</small>
+      </div>
+`)
       : (sendSmtpEmail.htmlContent = `<p>Information from Casa verde!</p>`);
+    // ? (sendSmtpEmail.htmlContent = `<h1>Hello ${user.username} 👋</h1><p>Thanks for signing up!</p>`)
   }
   sendSmtpEmail.sender = {
     name: "Casa Verde",
@@ -369,6 +389,7 @@ module.exports = {
   getMe,
   getUserById,
   createUser,
+  sendMail,
   updateUser,
   deleteUser,
   loginUser,
@@ -377,6 +398,5 @@ module.exports = {
   addUserFavorite,
   deleteUserFavorite,
   changeAvatar,
-  sendMail,
   contactUs,
 };

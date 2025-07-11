@@ -6,7 +6,6 @@ const { Server } = require("socket.io");
 const User = require("./models/userModel");
 const Property = require("./models/propertyModel");
 
-
 const userRoutes = require("./routes/userRoutes");
 const propertyRoutes = require("./routes/propertyRoutes");
 const contractCategoryRoutes = require("./routes/contractCategoryRoutes");
@@ -63,6 +62,7 @@ const server = app.listen(port, () => {
   console.log(`🚀 Server is running on http://localhost:${port}`);
 });
 
+// Socket IO Chatting Starts Here ------------------------
 const ADMIN = "admin";
 // state
 const UsersState = {
@@ -215,4 +215,4 @@ function getUsersInRoom(room) {
 function getAllActiveRooms() {
   return Array.from(new Set(UsersState.users.map((user) => user.room)));
 }
-
+// Socket IO Chatting Ends Here ------------------------
